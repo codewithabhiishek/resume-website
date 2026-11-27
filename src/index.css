@@ -2,22 +2,15 @@
 
 :root {
   --bg: #08090c;
-  --surface: #0e1016;
-  --surface-elevated: #141720;
+  --surface: #0c0e13;
   --border: #1f242d;
   --border-strong: #2d3340;
   --text: #f4f4f0;
   --muted: #8b949e;
   --lime: #c8ff29;
-  --orange: #ff6b35;
 }
 
-html {
-  scroll-behavior: smooth;
-  background-color: var(--bg);
-  color: var(--text);
-}
-
+html,
 body {
   font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   background-color: var(--bg);
@@ -35,9 +28,9 @@ body {
 
 .blueprint-grid {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-  background-size: 48px 48px;
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
 /* Pure-hex A4 sheet styles (avoids Tailwind v4 oklch() incompatibilities in html2canvas) */
@@ -46,7 +39,7 @@ body {
   min-height: 1123px;
   background-color: #ffffff;
   color: #1e293b;
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.72), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.78), 0 0 0 1px rgba(255, 255, 255, 0.08);
   font-family: "Georgia", "Times New Roman", serif;
   box-sizing: border-box;
 }
@@ -57,7 +50,7 @@ body {
   color: #0f172a;
 }
 
-@media (max-width: 840px) {
+@media (max-width: 1023px) {
   .a4-sheet {
     width: 100%;
     min-height: auto;
@@ -78,20 +71,31 @@ body {
     padding: 0 !important;
     width: 210mm !important;
     height: 297mm !important;
+    overflow: visible !important;
   }
 
   .no-print {
     display: none !important;
   }
 
-  .print-only-container {
+  .print-stage {
     padding: 0 !important;
     margin: 0 !important;
     background: #ffffff !important;
-    border: none !important;
+    display: block !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  .a4-scale-wrapper {
+    transform: none !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    margin: 0 !important;
   }
 
   .a4-sheet {
+    transform: none !important;
     box-shadow: none !important;
     border: none !important;
     width: 210mm !important;
