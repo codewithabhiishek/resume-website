@@ -7,6 +7,7 @@ const A4_HEIGHT = 1123;
 function App() {
   const resumeRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState(false);
   const [scale, setScale] = useState(1);
   const [isDesktop, setIsDesktop] = useState(() =>
     typeof window !== 'undefined' ? window.innerWidth >= 860 : true
@@ -103,192 +104,245 @@ function App() {
     marginBottom: '6px',
   };
 
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText('contactabhiishek101@gmail.com');
+    setCopiedEmail(true);
+    setTimeout(() => setCopiedEmail(false), 1800);
+  };
+
   return (
     <div
-      className="min-h-screen lg:h-screen lg:overflow-hidden flex flex-col lg:flex-row"
-      style={{ backgroundColor: '#0f172a' }}
+      className="min-h-screen lg:h-screen lg:overflow-hidden flex flex-col lg:flex-row relative"
+      style={{
+        backgroundColor: '#070b14',
+        backgroundImage:
+          'radial-gradient(circle at 15% 15%, rgba(163, 255, 71, 0.08), transparent 38%), radial-gradient(circle at 85% 80%, rgba(56, 189, 248, 0.1), transparent 42%), linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px)',
+        backgroundSize: '100% 100%, 100% 100%, 32px 32px, 32px 32px',
+      }}
     >
       {/* Mobile Top Bar */}
       <div
         className="no-print lg:hidden shrink-0 z-50 px-4 py-2.5 flex items-center justify-between"
         style={{
-          backgroundColor: '#0f172a',
-          borderBottom: '1px solid #1e293b',
+          backgroundColor: 'rgba(9, 13, 22, 0.92)',
+          backdropFilter: 'blur(10px)',
+          borderBottom: '2px solid #1e293b',
         }}
       >
         <div className="flex items-center gap-2">
-          <svg className="w-5 h-5" style={{ color: '#60a5fa' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          <span className="font-semibold text-sm" style={{ color: '#f8fafc', fontFamily: 'system-ui, sans-serif' }}>
-            Abhishek&apos;s Resume
+          <span
+            className="w-2.5 h-2.5 rounded-full animate-pulse"
+            style={{ backgroundColor: '#a3ff47', boxShadow: '0 0 10px #a3ff47' }}
+          />
+          <span className="font-bold text-sm tracking-wide uppercase" style={{ color: '#f8fafc', fontFamily: 'ui-monospace, monospace' }}>
+            ABHISHEK.DEV
           </span>
         </div>
         <button
           onClick={handleDownloadPDF}
           disabled={isDownloading}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg transition-all disabled:opacity-60 cursor-pointer"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-extrabold uppercase tracking-wider rounded-md transition-transform active:translate-y-0.5 disabled:opacity-60 cursor-pointer"
           style={{
-            backgroundColor: '#2563eb',
-            color: '#ffffff',
-            fontFamily: 'system-ui, sans-serif',
+            backgroundColor: '#a3ff47',
+            color: '#070b14',
+            border: '2px solid #000000',
+            boxShadow: '3px 3px 0 #000000',
+            fontFamily: 'ui-monospace, monospace',
           }}
         >
-          {isDownloading ? 'Generating...' : 'Download PDF'}
+          {isDownloading ? 'EXPORTING...' : '⚡ PDF (A4)'}
         </button>
       </div>
 
-      {/* Desktop Left Sidebar (eliminates empty side space & gives quick actions/highlights) */}
+      {/* Gen-Z Neo-Brutalist Bento Sidebar */}
       <aside
-        className="no-print hidden lg:flex lg:w-[320px] xl:w-[350px] shrink-0 flex-col justify-between p-6"
+        className="no-print hidden lg:flex lg:w-[330px] xl:w-[360px] shrink-0 flex-col justify-between p-5 relative z-10"
         style={{
-          backgroundColor: '#0f172a',
-          borderRight: '1px solid #1e293b',
+          backgroundColor: 'rgba(10, 15, 28, 0.88)',
+          backdropFilter: 'blur(12px)',
+          borderRight: '2px solid #1e293b',
           fontFamily: 'system-ui, -apple-system, sans-serif',
         }}
       >
-        <div className="space-y-5">
-          {/* Identity */}
-          <div>
+        <div className="space-y-4">
+          {/* Status + Identity Card */}
+          <div
+            className="p-4 rounded-xl"
+            style={{
+              backgroundColor: '#0f172a',
+              border: '2px solid #334155',
+              boxShadow: '4px 4px 0 #020617',
+            }}
+          >
             <div
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium mb-3"
-              style={{ backgroundColor: 'rgba(34, 197, 94, 0.14)', color: '#4ade80', border: '1px solid rgba(74, 222, 128, 0.25)' }}
+              className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest mb-3"
+              style={{
+                backgroundColor: 'rgba(163, 255, 71, 0.12)',
+                color: '#a3ff47',
+                border: '1px solid rgba(163, 255, 71, 0.35)',
+                fontFamily: 'ui-monospace, monospace',
+              }}
             >
-              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#4ade80' }} />
-              Open to SWE / DevOps Roles
+              <span
+                className="w-2 h-2 rounded-full animate-pulse"
+                style={{ backgroundColor: '#a3ff47', boxShadow: '0 0 8px #a3ff47' }}
+              />
+              SHIPPING PROD · OPEN TO WORK
             </div>
-            <h2 className="text-2xl font-bold tracking-tight" style={{ color: '#f8fafc' }}>
+            <h2 className="text-2xl font-black tracking-tight uppercase" style={{ color: '#ffffff' }}>
               Abhishek Jain
             </h2>
-            <p className="text-xs mt-1 leading-relaxed" style={{ color: '#94a3b8' }}>
-              Full-Stack Engineer · AI/ML &amp; Cloud/DevOps · BCA &apos;26
+            <p className="text-xs mt-1 font-medium" style={{ color: '#38bdf8', fontFamily: 'ui-monospace, monospace' }}>
+              FULL-STACK × AI/ML × DEVOPS
             </p>
           </div>
 
-          {/* Primary Actions */}
-          <div className="space-y-2">
+          {/* Chunky Primary Actions */}
+          <div className="space-y-2.5">
             <button
               onClick={handleDownloadPDF}
               disabled={isDownloading}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer shadow-lg"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 text-xs font-black uppercase tracking-wider rounded-xl transition-all hover:-translate-y-0.5 active:translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
               style={{
-                backgroundColor: '#2563eb',
-                color: '#ffffff',
+                backgroundColor: '#a3ff47',
+                color: '#070b14',
+                border: '2px solid #000000',
+                boxShadow: '4px 4px 0 #000000',
+                fontFamily: 'ui-monospace, monospace',
               }}
             >
-              {isDownloading ? (
-                <>
-                  <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Generating A4 PDF...
-                </>
-              ) : (
-                <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Download A4 PDF
-                </>
-              )}
+              {isDownloading ? '⏳ GENERATING A4 PDF...' : '⚡ DOWNLOAD A4 PDF'}
             </button>
-            <button
-              onClick={() => window.print()}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium rounded-lg transition-colors cursor-pointer"
-              style={{
-                backgroundColor: '#1e293b',
-                color: '#e2e8f0',
-                border: '1px solid #334155',
-              }}
-            >
-              Print A4 Sheet
-            </button>
+
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => window.print()}
+                className="flex items-center justify-center gap-1.5 px-3 py-2 text-[11px] font-bold uppercase tracking-wider rounded-lg transition-all hover:-translate-y-0.5 cursor-pointer"
+                style={{
+                  backgroundColor: '#1e293b',
+                  color: '#f8fafc',
+                  border: '2px solid #334155',
+                  boxShadow: '3px 3px 0 #020617',
+                  fontFamily: 'ui-monospace, monospace',
+                }}
+              >
+                🖨️ PRINT
+              </button>
+              <button
+                onClick={handleCopyEmail}
+                className="flex items-center justify-center gap-1.5 px-3 py-2 text-[11px] font-bold uppercase tracking-wider rounded-lg transition-all hover:-translate-y-0.5 cursor-pointer"
+                style={{
+                  backgroundColor: copiedEmail ? '#38bdf8' : '#1e293b',
+                  color: copiedEmail ? '#070b14' : '#38bdf8',
+                  border: '2px solid #334155',
+                  boxShadow: '3px 3px 0 #020617',
+                  fontFamily: 'ui-monospace, monospace',
+                }}
+              >
+                {copiedEmail ? '✓ COPIED' : '📋 EMAIL'}
+              </button>
+            </div>
           </div>
 
-          {/* Quick Highlights */}
-          <div
-            className="rounded-xl p-3.5 space-y-2.5"
-            style={{ backgroundColor: '#1e293b', border: '1px solid #334155' }}
-          >
-            <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#60a5fa' }}>
-              Highlights
+          {/* Bento Highlights */}
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            <div
+              className="p-2.5 rounded-xl"
+              style={{ backgroundColor: '#0f172a', border: '2px solid #1e293b', boxShadow: '3px 3px 0 #020617' }}
+            >
+              <div className="font-black text-base" style={{ color: '#a3ff47', fontFamily: 'ui-monospace, monospace' }}>20+</div>
+              <div className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: '#94a3b8' }}>Live Apps</div>
             </div>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="p-2 rounded-lg" style={{ backgroundColor: '#0f172a' }}>
-                <div className="font-bold text-sm" style={{ color: '#f8fafc' }}>20+</div>
-                <div className="text-[11px]" style={{ color: '#94a3b8' }}>Live Apps</div>
-              </div>
-              <div className="p-2 rounded-lg" style={{ backgroundColor: '#0f172a' }}>
-                <div className="font-bold text-sm" style={{ color: '#f8fafc' }}>Argo CD</div>
-                <div className="text-[11px]" style={{ color: '#94a3b8' }}>OSS Contributor</div>
-              </div>
-              <div className="p-2 rounded-lg" style={{ backgroundColor: '#0f172a' }}>
-                <div className="font-bold text-sm" style={{ color: '#f8fafc' }}>8th Rank</div>
-                <div className="text-[11px]" style={{ color: '#94a3b8' }}>Int&apos;l Hackathon</div>
-              </div>
-              <div className="p-2 rounded-lg" style={{ backgroundColor: '#0f172a' }}>
-                <div className="font-bold text-sm" style={{ color: '#f8fafc' }}>MSME 6.0</div>
-                <div className="text-[11px]" style={{ color: '#94a3b8' }}>Pitch Shortlist</div>
-              </div>
+            <div
+              className="p-2.5 rounded-xl"
+              style={{ backgroundColor: '#0f172a', border: '2px solid #1e293b', boxShadow: '3px 3px 0 #020617' }}
+            >
+              <div className="font-black text-base" style={{ color: '#38bdf8', fontFamily: 'ui-monospace, monospace' }}>ARGO CD</div>
+              <div className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: '#94a3b8' }}>OSS Contrib</div>
+            </div>
+            <div
+              className="p-2.5 rounded-xl"
+              style={{ backgroundColor: '#0f172a', border: '2px solid #1e293b', boxShadow: '3px 3px 0 #020617' }}
+            >
+              <div className="font-black text-base" style={{ color: '#fbbf24', fontFamily: 'ui-monospace, monospace' }}>#8 INT&apos;L</div>
+              <div className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: '#94a3b8' }}>Hackathon</div>
+            </div>
+            <div
+              className="p-2.5 rounded-xl"
+              style={{ backgroundColor: '#0f172a', border: '2px solid #1e293b', boxShadow: '3px 3px 0 #020617' }}
+            >
+              <div className="font-black text-base" style={{ color: '#f472b6', fontFamily: 'ui-monospace, monospace' }}>MSME 6.0</div>
+              <div className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: '#94a3b8' }}>Shortlisted</div>
+            </div>
+          </div>
+
+          {/* Tech Stack Chips */}
+          <div
+            className="p-3 rounded-xl"
+            style={{ backgroundColor: '#0f172a', border: '2px solid #1e293b' }}
+          >
+            <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: '#94a3b8', fontFamily: 'ui-monospace, monospace' }}>
+              CORE STACK
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {['Python', 'TypeScript', 'React', 'FastAPI', 'YOLOv8', 'Docker', 'K8s', 'Argo CD'].map((tech) => (
+                <span
+                  key={tech}
+                  className="px-2 py-0.5 rounded text-[10px] font-bold"
+                  style={{
+                    backgroundColor: '#1e293b',
+                    color: '#e2e8f0',
+                    border: '1px solid #334155',
+                    fontFamily: 'ui-monospace, monospace',
+                  }}
+                >
+                  {tech}
+                </span>
+              ))}
             </div>
           </div>
 
           {/* Direct Links */}
-          <div className="space-y-1.5 text-xs">
-            <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: '#94a3b8' }}>
-              Connect
-            </div>
+          <div className="grid grid-cols-3 gap-2 text-[11px] font-bold" style={{ fontFamily: 'ui-monospace, monospace' }}>
             <a
               href="https://abhiishek.is-a.dev/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-between px-3 py-2 rounded-lg transition-colors"
-              style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}
+              className="py-2 rounded-lg text-center transition-transform hover:-translate-y-0.5"
+              style={{ backgroundColor: '#1e293b', color: '#a3ff47', border: '1px solid #334155' }}
             >
-              <span>Portfolio</span>
-              <span style={{ color: '#60a5fa' }}>abhiishek.is-a.dev ↗</span>
+              WEB ↗
             </a>
             <a
               href="https://github.com/codewithabhiishek"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-between px-3 py-2 rounded-lg transition-colors"
-              style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}
+              className="py-2 rounded-lg text-center transition-transform hover:-translate-y-0.5"
+              style={{ backgroundColor: '#1e293b', color: '#f8fafc', border: '1px solid #334155' }}
             >
-              <span>GitHub</span>
-              <span style={{ color: '#60a5fa' }}>@codewithabhiishek ↗</span>
+              GITHUB ↗
             </a>
             <a
               href="https://www.linkedin.com/in/codewithabhiishek"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-between px-3 py-2 rounded-lg transition-colors"
-              style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}
+              className="py-2 rounded-lg text-center transition-transform hover:-translate-y-0.5"
+              style={{ backgroundColor: '#1e293b', color: '#38bdf8', border: '1px solid #334155' }}
             >
-              <span>LinkedIn</span>
-              <span style={{ color: '#60a5fa' }}>Connect ↗</span>
-            </a>
-            <a
-              href="mailto:contactabhiishek101@gmail.com"
-              className="flex items-center justify-between px-3 py-2 rounded-lg transition-colors"
-              style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}
-            >
-              <span>Email</span>
-              <span className="truncate ml-2" style={{ color: '#60a5fa' }}>contactabhiishek101@gmail.com</span>
+              LINKEDIN ↗
             </a>
           </div>
         </div>
 
-        <div className="text-[11px]" style={{ color: '#64748b' }}>
-          A4 Format · 210 × 297 mm
+        <div className="flex items-center justify-between text-[10px] uppercase tracking-wider" style={{ color: '#64748b', fontFamily: 'ui-monospace, monospace' }}>
+          <span>A4 · 210×297MM</span>
+          <span style={{ color: '#a3ff47' }}>ATS READY</span>
         </div>
       </aside>
 
       {/* Centered A4 Viewport */}
       <main
-        className="flex-1 min-h-0 flex items-center justify-center p-3 lg:p-5 overflow-y-auto lg:overflow-hidden"
-        style={{ backgroundColor: '#1e293b' }}
+        className="flex-1 min-h-0 flex items-center justify-center p-3 lg:p-5 overflow-y-auto lg:overflow-hidden relative z-10"
       >
         <div
           className="a4-scale-wrapper"
