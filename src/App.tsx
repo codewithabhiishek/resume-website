@@ -40,7 +40,7 @@ function App() {
 
       const opt = {
         margin: 0,
-        filename: 'John_Anderson_Resume.pdf',
+        filename: 'Abhishek_Jain_Resume.pdf',
         image: { type: 'jpeg' as const, quality: 0.98 },
         html2canvas: {
           scale: 2,
@@ -50,7 +50,6 @@ function App() {
           backgroundColor: '#ffffff',
           windowWidth: A4_WIDTH,
           onclone: (doc: Document) => {
-            // Strip Tailwind v4 oklch() stylesheets from the cloned doc so html2canvas never fails parsing oklch
             doc.querySelectorAll('style, link[rel="stylesheet"]').forEach((node) => {
               if (node.tagName === 'STYLE' && node.textContent?.includes('oklch')) {
                 node.remove();
@@ -67,7 +66,7 @@ function App() {
               clonedSheet.style.flexDirection = 'column';
               clonedSheet.style.justifyContent = 'space-between';
               clonedSheet.style.backgroundColor = '#ffffff';
-              clonedSheet.style.color = '#1e293b';
+              clonedSheet.style.color = '#111827';
               clonedSheet.style.fontFamily = "'Georgia', 'Times New Roman', serif";
               clonedSheet.style.boxSizing = 'border-box';
               clonedSheet.style.boxShadow = 'none';
@@ -86,11 +85,21 @@ function App() {
       await html2pdf().set(opt).from(element).save();
     } catch (error) {
       console.error('PDF generation failed:', error);
-      // Fallback to native A4 print dialog if canvas export is blocked
       window.print();
     } finally {
       setIsDownloading(false);
     }
+  };
+
+  const sectionHeadingStyle: React.CSSProperties = {
+    fontSize: '12px',
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    letterSpacing: '0.07em',
+    color: '#0f172a',
+    borderBottom: '1px solid #1e293b',
+    paddingBottom: '2px',
+    marginBottom: '6px',
   };
 
   return (
@@ -145,7 +154,7 @@ function App() {
         </div>
       </div>
 
-      {/* Centered A4 Viewport (fits 100% on desktop without scrolling) */}
+      {/* Centered A4 Viewport */}
       <main className="flex-1 min-h-0 flex items-center justify-center p-3 lg:p-4 overflow-y-auto lg:overflow-hidden">
         <div
           className="a4-scale-wrapper"
@@ -167,280 +176,262 @@ function App() {
                 ? {
                     transform: `scale(${scale})`,
                     transformOrigin: 'top left',
-                    padding: '34px 42px',
+                    padding: '32px 42px',
                   }
-                : { padding: '24px 20px' }
+                : { padding: '22px 18px' }
             }
           >
-            {/* Header */}
             <div>
-              <header style={{ borderBottom: '2px solid #1e293b', paddingBottom: '12px', marginBottom: '16px' }}>
+              {/* Header */}
+              <header style={{ textAlign: 'center', marginBottom: '12px' }}>
                 <h1
                   style={{
                     fontSize: '28px',
                     fontWeight: 700,
-                    letterSpacing: '0.06em',
-                    textAlign: 'center',
-                    textTransform: 'uppercase',
                     color: '#0f172a',
                     margin: 0,
+                    lineHeight: 1.15,
                   }}
                 >
-                  John Anderson
+                  Abhishek Jain
                 </h1>
-                <p
-                  style={{
-                    textAlign: 'center',
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    color: '#1d4ed8',
-                    marginTop: '3px',
-                    fontFamily: 'system-ui, sans-serif',
-                  }}
-                >
-                  Senior Software Engineer · Full-Stack &amp; Cloud Architecture
-                </p>
                 <div
                   style={{
                     display: 'flex',
                     flexWrap: 'wrap',
                     justifyContent: 'center',
-                    gap: '6px 18px',
-                    marginTop: '8px',
+                    alignItems: 'center',
+                    gap: '4px 8px',
+                    marginTop: '5px',
                     fontSize: '11.5px',
-                    color: '#475569',
-                    fontFamily: 'system-ui, sans-serif',
+                    color: '#1e293b',
                   }}
                 >
-                  <span>San Francisco, CA 94102</span>
-                  <span>•</span>
-                  <span>(555) 123-4567</span>
-                  <span>•</span>
-                  <span>john.anderson@email.com</span>
-                  <span>•</span>
-                  <span>linkedin.com/in/johnanderson</span>
+                  <span>+91 9548469164</span>
+                  <span>|</span>
+                  <a
+                    href="mailto:contactabhiishek101@gmail.com"
+                    style={{ color: '#0f172a', textDecoration: 'underline' }}
+                  >
+                    contactabhiishek101@gmail.com
+                  </a>
+                  <span>|</span>
+                  <a
+                    href="https://www.linkedin.com/in/codewithabhiishek"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: '#0f172a', textDecoration: 'underline' }}
+                  >
+                    LinkedIn
+                  </a>
+                  <span>|</span>
+                  <a
+                    href="https://github.com/codewithabhiishek"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: '#0f172a', textDecoration: 'underline' }}
+                  >
+                    GitHub
+                  </a>
+                  <span>|</span>
+                  <a
+                    href="https://abhiishek.is-a.dev/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: '#0f172a', textDecoration: 'underline' }}
+                  >
+                    Portfolio
+                  </a>
                 </div>
               </header>
 
-              {/* Professional Summary */}
-              <section style={{ marginBottom: '14px' }}>
-                <h2
-                  style={{
-                    fontSize: '12.5px',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.06em',
-                    color: '#0f172a',
-                    borderBottom: '1px solid #cbd5e1',
-                    paddingBottom: '3px',
-                    marginBottom: '6px',
-                  }}
-                >
-                  Professional Summary
-                </h2>
-                <p style={{ fontSize: '12px', lineHeight: 1.48, color: '#334155', margin: 0 }}>
-                  Results-driven Software Engineer with 5+ years of experience in designing, developing, and deploying scalable web applications. Proficient in modern JavaScript frameworks, cloud technologies, and agile methodologies. Proven track record of delivering high-quality solutions that improve user experience and drive business growth.
-                </p>
-              </section>
-
-              {/* Professional Experience */}
-              <section style={{ marginBottom: '14px' }}>
-                <h2
-                  style={{
-                    fontSize: '12.5px',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.06em',
-                    color: '#0f172a',
-                    borderBottom: '1px solid #cbd5e1',
-                    paddingBottom: '3px',
-                    marginBottom: '8px',
-                  }}
-                >
-                  Professional Experience
-                </h2>
-
-                {/* Job 1 */}
-                <div style={{ marginBottom: '10px' }}>
+              {/* EDUCATION */}
+              <section style={{ marginBottom: '10px' }}>
+                <h2 style={sectionHeadingStyle}>Education</h2>
+                <div style={{ marginBottom: '4px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                    <div>
-                      <span style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a' }}>Senior Software Engineer</span>
-                      <span style={{ fontSize: '12px', fontStyle: 'italic', color: '#475569' }}> — TechCorp Solutions Inc.</span>
-                    </div>
-                    <span style={{ fontSize: '11px', color: '#64748b', fontFamily: 'system-ui, sans-serif' }}>Jan 2022 – Present</span>
+                    <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#0f172a' }}>DBS Global University</span>
+                    <span style={{ fontSize: '11.5px', color: '#1e293b' }}>2023 – 2026</span>
                   </div>
-                  <ul style={{ margin: '4px 0 0 0', paddingLeft: '16px', fontSize: '11.8px', lineHeight: 1.42, color: '#334155' }}>
-                    <li>Led a team of 5 developers in building a microservices-based platform serving 2M+ users.</li>
-                    <li>Reduced application load time by 40% through code optimization and caching strategies.</li>
-                    <li>Implemented CI/CD pipelines using GitHub Actions, reducing deployment time by 60%.</li>
-                    <li>Mentored junior developers and conducted code reviews to maintain code quality standards.</li>
-                  </ul>
-                </div>
-
-                {/* Job 2 */}
-                <div style={{ marginBottom: '10px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                    <div>
-                      <span style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a' }}>Software Engineer</span>
-                      <span style={{ fontSize: '12px', fontStyle: 'italic', color: '#475569' }}> — WebDev Agency LLC</span>
-                    </div>
-                    <span style={{ fontSize: '11px', color: '#64748b', fontFamily: 'system-ui, sans-serif' }}>Jun 2019 – Dec 2021</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '11.5px', fontStyle: 'italic', color: '#334155' }}>
+                    <span>Bachelor of Computer Applications</span>
+                    <span>CGPA: 7.48</span>
                   </div>
-                  <ul style={{ margin: '4px 0 0 0', paddingLeft: '16px', fontSize: '11.8px', lineHeight: 1.42, color: '#334155' }}>
-                    <li>Developed and maintained 15+ client-facing web applications using React and Node.js.</li>
-                    <li>Collaborated with UX/UI designers to implement responsive, accessible interfaces.</li>
-                    <li>Built RESTful APIs and integrated third-party services (Stripe, Twilio, AWS) with 98% CSAT.</li>
-                  </ul>
                 </div>
-
-                {/* Job 3 */}
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                    <div>
-                      <span style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a' }}>Junior Developer</span>
-                      <span style={{ fontSize: '12px', fontStyle: 'italic', color: '#475569' }}> — StartupHub Technologies</span>
-                    </div>
-                    <span style={{ fontSize: '11px', color: '#64748b', fontFamily: 'system-ui, sans-serif' }}>Aug 2017 – May 2019</span>
+                    <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#0f172a' }}>Jim Corbett Public School</span>
+                    <span style={{ fontSize: '11.5px', color: '#1e293b' }}>2023</span>
                   </div>
-                  <ul style={{ margin: '4px 0 0 0', paddingLeft: '16px', fontSize: '11.8px', lineHeight: 1.42, color: '#334155' }}>
-                    <li>Assisted in full-stack development of an e-commerce platform using React and Express.</li>
-                    <li>Wrote unit and integration tests achieving 85% automated code coverage.</li>
-                  </ul>
-                </div>
-              </section>
-
-              {/* Key Projects */}
-              <section style={{ marginBottom: '14px' }}>
-                <h2
-                  style={{
-                    fontSize: '12.5px',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.06em',
-                    color: '#0f172a',
-                    borderBottom: '1px solid #cbd5e1',
-                    paddingBottom: '3px',
-                    marginBottom: '8px',
-                  }}
-                >
-                  Key Projects
-                </h2>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '10px' }}>
-                  <div style={{ padding: '8px 10px', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '4px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '8px' }}>
-                      <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#0f172a' }}>TaskFlow</span>
-                      <span style={{ fontSize: '10.5px', color: '#1d4ed8', fontFamily: 'system-ui, sans-serif' }}>React, Node.js, PostgreSQL</span>
-                    </div>
-                    <p style={{ margin: '4px 0 0 0', fontSize: '11.5px', lineHeight: 1.4, color: '#334155' }}>
-                      Real-time collaborative project manager with drag-and-drop Kanban boards, team chat, and reporting for 500+ users.
-                    </p>
-                  </div>
-                  <div style={{ padding: '8px 10px', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '4px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '8px' }}>
-                      <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#0f172a' }}>ShopSmart</span>
-                      <span style={{ fontSize: '10.5px', color: '#1d4ed8', fontFamily: 'system-ui, sans-serif' }}>Next.js, Stripe, MongoDB</span>
-                    </div>
-                    <p style={{ margin: '4px 0 0 0', fontSize: '11.5px', lineHeight: 1.4, color: '#334155' }}>
-                      Full-stack e-commerce platform with checkout, inventory management, and analytics driving $50K+ first-year sales.
-                    </p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '11.5px', fontStyle: 'italic', color: '#334155' }}>
+                    <span>Class XII</span>
+                    <span>74.89%</span>
                   </div>
                 </div>
               </section>
 
-              {/* Technical Skills */}
-              <section style={{ marginBottom: '14px' }}>
-                <h2
-                  style={{
-                    fontSize: '12.5px',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.06em',
-                    color: '#0f172a',
-                    borderBottom: '1px solid #cbd5e1',
-                    paddingBottom: '3px',
-                    marginBottom: '6px',
-                  }}
-                >
-                  Technical Skills
-                </h2>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '4px 20px', fontSize: '11.8px', lineHeight: 1.45, color: '#334155' }}>
-                  <div><strong style={{ color: '#0f172a' }}>Languages:</strong> JavaScript, TypeScript, Python, HTML5, CSS3, SQL</div>
-                  <div><strong style={{ color: '#0f172a' }}>Frameworks:</strong> React, Next.js, Node.js, Express, Django, Tailwind</div>
-                  <div><strong style={{ color: '#0f172a' }}>Databases:</strong> PostgreSQL, MongoDB, Redis, Firebase</div>
-                  <div><strong style={{ color: '#0f172a' }}>Tools &amp; Cloud:</strong> Git, Docker, AWS, Vercel, Figma, Jira</div>
-                  <div><strong style={{ color: '#0f172a' }}>Practices:</strong> Agile/Scrum, TDD, CI/CD, REST, GraphQL</div>
-                  <div><strong style={{ color: '#0f172a' }}>Soft Skills:</strong> Leadership, Communication, Problem-Solving</div>
+              {/* TECHNICAL SKILLS */}
+              <section style={{ marginBottom: '10px' }}>
+                <h2 style={sectionHeadingStyle}>Technical Skills</h2>
+                <div style={{ fontSize: '11.5px', lineHeight: 1.42, color: '#1e293b' }}>
+                  <div><strong style={{ color: '#0f172a' }}>Languages:</strong> Python, TypeScript, SQL, Bash</div>
+                  <div><strong style={{ color: '#0f172a' }}>Frontend:</strong> React, Vite, Tailwind CSS</div>
+                  <div><strong style={{ color: '#0f172a' }}>Backend:</strong> FastAPI, WebSockets, SQLModel, SQLite</div>
+                  <div><strong style={{ color: '#0f172a' }}>AI/ML:</strong> YOLOv8, ByteTrack, OpenCV, XGBoost, scikit-learn</div>
+                  <div><strong style={{ color: '#0f172a' }}>DevOps:</strong> Docker, Kubernetes, Jenkins, Terraform, Git, GitHub Actions, Argo CD</div>
                 </div>
               </section>
 
-              {/* Education & Certifications side-by-side */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
-                <section>
-                  <h2
-                    style={{
-                      fontSize: '12.5px',
-                      fontWeight: 700,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.06em',
-                      color: '#0f172a',
-                      borderBottom: '1px solid #cbd5e1',
-                      paddingBottom: '3px',
-                      marginBottom: '6px',
-                    }}
-                  >
-                    Education
-                  </h2>
+              {/* EXPERIENCE */}
+              <section style={{ marginBottom: '10px' }}>
+                <h2 style={sectionHeadingStyle}>Experience</h2>
+                <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                    <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#0f172a' }}>B.S. Computer Science</span>
-                    <span style={{ fontSize: '11px', color: '#64748b', fontFamily: 'system-ui, sans-serif' }}>2013 – 2017</span>
+                    <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#0f172a' }}>Freelance Software Engineer</span>
+                    <span style={{ fontSize: '11.5px', color: '#1e293b' }}>2025 – 2026</span>
                   </div>
-                  <p style={{ fontSize: '11.8px', fontStyle: 'italic', color: '#475569', margin: '2px 0' }}>
-                    University of California, Berkeley
-                  </p>
-                  <p style={{ fontSize: '11.2px', color: '#334155', margin: 0, lineHeight: 1.4 }}>
-                    GPA: 3.7/4.0 · Dean&apos;s List (6 semesters)
-                  </p>
-                </section>
-
-                <section>
-                  <h2
-                    style={{
-                      fontSize: '12.5px',
-                      fontWeight: 700,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.06em',
-                      color: '#0f172a',
-                      borderBottom: '1px solid #cbd5e1',
-                      paddingBottom: '3px',
-                      marginBottom: '6px',
-                    }}
-                  >
-                    Certifications
-                  </h2>
-                  <ul style={{ margin: 0, padding: 0, listStyle: 'none', fontSize: '11.5px', lineHeight: 1.48, color: '#334155' }}>
-                    <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span><strong style={{ color: '#0f172a' }}>AWS Solutions Architect</strong> · AWS</span>
-                      <span style={{ color: '#64748b', fontFamily: 'system-ui, sans-serif' }}>2023</span>
-                    </li>
-                    <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span><strong style={{ color: '#0f172a' }}>Google Cloud Developer</strong> · GCP</span>
-                      <span style={{ color: '#64748b', fontFamily: 'system-ui, sans-serif' }}>2022</span>
-                    </li>
-                    <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span><strong style={{ color: '#0f172a' }}>Meta Front-End Developer</strong> · Coursera</span>
-                      <span style={{ color: '#64748b', fontFamily: 'system-ui, sans-serif' }}>2021</span>
+                  <div style={{ fontSize: '11.5px', fontStyle: 'italic', color: '#334155', marginBottom: '3px' }}>
+                    Self-Employed
+                  </div>
+                  <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '11.3px', lineHeight: 1.38, color: '#1e293b' }}>
+                    <li>Built and deployed full-stack client web applications end-to-end — frontend, backend, API integration, and deployment.</li>
+                    <li>Shipped production software including an inventory &amp; billing system, a CRM platform, and a business website for a dental practice.</li>
+                    <li>Partnered directly with clients from requirements through launch, delivering working, deployed products.</li>
+                    <li>
+                      <strong style={{ color: '#0f172a' }}>Selected Work:</strong>{' '}
+                      <span style={{ textDecoration: 'underline' }}>Inventory &amp; Billing System</span> |{' '}
+                      <span style={{ textDecoration: 'underline' }}>CRM Platform</span> |{' '}
+                      <span style={{ textDecoration: 'underline' }}>Dentist Website</span>
                     </li>
                   </ul>
-                </section>
-              </div>
-            </div>
+                </div>
+              </section>
 
-            {/* Footer */}
-            <footer style={{ borderTop: '1px solid #e2e8f0', paddingTop: '8px', marginTop: '12px', textAlign: 'center' }}>
-              <p style={{ fontSize: '10.5px', color: '#94a3b8', fontStyle: 'italic', margin: 0 }}>
-                References available upon request
-              </p>
-            </footer>
+              {/* PROJECTS */}
+              <section style={{ marginBottom: '10px' }}>
+                <h2 style={sectionHeadingStyle}>Projects</h2>
+
+                {/* Project 1 */}
+                <div style={{ marginBottom: '7px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '8px' }}>
+                    <div style={{ fontSize: '12px', color: '#0f172a' }}>
+                      <strong style={{ textDecoration: 'underline' }}>ChargeIQ — EV Route Planner</strong>{' '}
+                      <span style={{ color: '#475569' }}>|</span>{' '}
+                      <span style={{ fontStyle: 'italic', fontSize: '11px', color: '#334155' }}>
+                        React, Vite, FastAPI, Python, OSRM, OpenChargeMap, XGBoost, scikit-learn
+                      </span>
+                    </div>
+                    <span style={{ fontSize: '11.5px', color: '#1e293b', whiteSpace: 'nowrap' }}>2026</span>
+                  </div>
+                  <ul style={{ margin: '2px 0 0 0', paddingLeft: '18px', fontSize: '11.3px', lineHeight: 1.38, color: '#1e293b' }}>
+                    <li>Built a full-stack EV trip planner with OSRM and OpenChargeMap, cutting charging-stop planning time by 30%.</li>
+                    <li>Trained XGBoost and scikit-learn models to predict station wait times and improve route reliability.</li>
+                    <li>Designed a hybrid real/estimated data system with a 10% battery reserve safety margin.</li>
+                  </ul>
+                </div>
+
+                {/* Project 2 */}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '8px' }}>
+                    <div style={{ fontSize: '12px', color: '#0f172a' }}>
+                      <strong style={{ textDecoration: 'underline' }}>Traffic Intelligence Platform</strong>{' '}
+                      <span style={{ color: '#475569' }}>|</span>{' '}
+                      <span style={{ fontStyle: 'italic', fontSize: '11px', color: '#334155' }}>
+                        YOLOv8n, ByteTrack, OpenCV, FastAPI, React 19, WebSockets
+                      </span>
+                    </div>
+                    <span style={{ fontSize: '11.5px', color: '#1e293b', whiteSpace: 'nowrap' }}>2026</span>
+                  </div>
+                  <ul style={{ margin: '2px 0 0 0', paddingLeft: '18px', fontSize: '11.3px', lineHeight: 1.38, color: '#1e293b' }}>
+                    <li>Built an AI traffic monitoring platform using YOLOv8n, ByteTrack, and OpenCV for real-time vehicle detection and tracking.</li>
+                    <li>Added speed estimation, zone-violation detection, and JWT role-based access control.</li>
+                    <li>Streamed live telemetry at 30 FPS, cutting manual monitoring needs by 60% for site operators.</li>
+                    <li>
+                      <strong style={{ color: '#0f172a' }}>Additional Projects:</strong> 20+ live, working apps (full-stack, AI/ML, cloud) — see all at{' '}
+                      <a
+                        href="https://abhiishek.is-a.dev/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: '#0f172a', textDecoration: 'underline' }}
+                      >
+                        abhiishek.is-a.dev
+                      </a>
+                      .
+                    </li>
+                    <li>
+                      <strong style={{ color: '#0f172a' }}>Open Source:</strong> Contributor to Argo CD (Docker Hub webhook parser, namespace validation UX) —{' '}
+                      <a
+                        href="https://github.com/codewithabhiishek"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: '#0f172a', textDecoration: 'underline' }}
+                      >
+                        GitHub
+                      </a>
+                      .
+                    </li>
+                  </ul>
+                </div>
+              </section>
+
+              {/* LEADERSHIP */}
+              <section style={{ marginBottom: '10px' }}>
+                <h2 style={sectionHeadingStyle}>Leadership</h2>
+                <div style={{ marginBottom: '5px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                    <span style={{ fontSize: '12px', fontWeight: 700, color: '#0f172a' }}>
+                      Hackathon Organizer (SIH Internal Round)
+                    </span>
+                    <span style={{ fontSize: '11.5px', color: '#1e293b' }}>2025</span>
+                  </div>
+                  <div style={{ fontSize: '11.2px', fontStyle: 'italic', color: '#334155', marginBottom: '2px' }}>
+                    DBS Global University
+                  </div>
+                  <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '11.3px', lineHeight: 1.36, color: '#1e293b' }}>
+                    <li>Coordinated logistics for 50+ teams and 200+ participants.</li>
+                    <li>Drove 15+ functional prototypes and a 20% rise in student participation year-over-year.</li>
+                  </ul>
+                </div>
+
+                <div style={{ marginBottom: '5px' }}>
+                  <div style={{ fontSize: '12px', fontWeight: 700, color: '#0f172a' }}>
+                    International Hackathon Winner
+                  </div>
+                  <div style={{ fontSize: '11.3px', fontStyle: 'italic', color: '#1e293b' }}>
+                    Secured 8th rank in an International Hackathon at Christ University, Delhi NCR
+                  </div>
+                </div>
+
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '8px' }}>
+                    <div style={{ fontSize: '12px', color: '#0f172a' }}>
+                      <strong>MSME Idea Hackathon 6.0</strong>{' '}
+                      <span style={{ color: '#475569' }}>|</span>{' '}
+                      <span style={{ fontStyle: 'italic', fontSize: '11.2px', color: '#334155' }}>
+                        Host Institute: Bennett University, Noida
+                      </span>
+                    </div>
+                    <span style={{ fontSize: '11.5px', color: '#1e293b', whiteSpace: 'nowrap' }}>2026</span>
+                  </div>
+                  <div style={{ fontSize: '11.3px', fontStyle: 'italic', color: '#1e293b' }}>
+                    Shortlisted for Pitch Round; cleared Host Institute Round with Expert Committee backing; awaiting funding.
+                  </div>
+                </div>
+              </section>
+
+              {/* CERTIFICATIONS */}
+              <section>
+                <h2 style={sectionHeadingStyle}>Certifications</h2>
+                <div style={{ fontSize: '11.5px', lineHeight: 1.45, color: '#1e293b' }}>
+                  <div>
+                    <strong style={{ color: '#0f172a' }}>IBM DevOps and Software Engineering Specialization</strong> – IBM, Mar 2024
+                  </div>
+                  <div>
+                    <strong style={{ color: '#0f172a' }}>Linux Commands &amp; Shell Scripting Essentials V2</strong> – Coursera, Mar 2024
+                  </div>
+                </div>
+              </section>
+            </div>
           </div>
         </div>
       </main>
