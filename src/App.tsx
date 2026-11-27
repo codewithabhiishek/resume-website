@@ -4,11 +4,24 @@ import html2pdf from 'html2pdf.js';
 const A4_WIDTH = 794;
 const A4_HEIGHT = 1123;
 
+const ACCENTS = {
+  lime: { label: 'LIME', hex: '#a3ff47', text: '#070b14' },
+  cyan: { label: 'CYAN', hex: '#38bdf8', text: '#070b14' },
+  coral: { label: 'CORAL', hex: '#fb7185', text: '#070b14' },
+} as const;
+
+type AccentKey = keyof typeof ACCENTS;
+type ResumeSection = 'education' | 'skills' | 'experience' | 'projects' | 'leadership' | 'certifications' | null;
+
 function App() {
   const resumeRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const [accentKey, setAccentKey] = useState<AccentKey>('lime');
+  const [activeSection, setActiveSection] = useState<ResumeSection>(null);
+  const [zoomFull, setZoomFull] = useState(false);
   const [scale, setScale] = useState(1);
+  const accent = ACCENTS[accentKey];
   const [isDesktop, setIsDesktop] = useState(() =>
     typeof window !== 'undefined' ? window.innerWidth >= 860 : true
   );
@@ -21,16 +34,16 @@ function App() {
         setScale(1);
         return;
       }
-      // Account for left sidebar (310px) + gaps/padding
-      const availW = window.innerWidth - 380;
+      // Account for left sidebar + gaps/padding
+      const availW = window.innerWidth - 390;
       const availH = window.innerHeight - 40;
-      const next = Math.min(1, availW / A4_WIDTH, availH / A4_HEIGHT);
+      const next = zoomFull ? 1 : Math.min(1, availW / A4_WIDTH, availH / A4_HEIGHT);
       setScale(Math.max(0.48, next));
     };
     updateScale();
     window.addEventListener('resize', updateScale);
     return () => window.removeEventListener('resize', updateScale);
-  }, []);
+  }, [zoomFull]);
 
   const handleDownloadPDF = async () => {
     if (!resumeRef.current) return;
@@ -161,86 +174,165 @@ function App() {
           backgroundColor: 'rgba(10, 15, 28, 0.88)',
           backdropFilter: 'blur(12px)',
           borderRight: '2px solid #1e293b',
-          fontFamily: 'system-ui, -apple-system, sans-serif',
+          fontFamily: "'Space Grotesk', system-ui, sans-serif",
         }}
       >
-        <div className="space-y-4">
+        <div className="space-y-3.5">
           {/* Status + Identity Card */}
           <div
             className="p-4 rounded-xl"
             style={{
               backgroundColor: '#0f172a',
               border: '2px solid #334155',
-              boxShadow: '4px 4px 0 #020617',
+              boxShadow: `4px 4px 0 ${accent.hex}`,
             }}
           >
-            <div
-              className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest mb-3"
-              style={{
-                backgroundColor: 'rgba(163, 255, 71, 0.12)',
-                color: '#a3ff47',
-                border: '1px solid rgba(163, 255, 71, 0.35)',
-                fontFamily: 'ui-monospace, monospace',
-              }}
-            >
-              <span
-                className="w-2 h-2 rounded-full animate-pulse"
-                style={{ backgroundColor: '#a3ff47', boxShadow: '0 0 8px #a3ff47' }}
-              />
-              SHIPPING PROD · OPEN TO WORK
+            <div className="flex items-center justify-between gap-2 mb-2.5">
+              <div
+                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest"
+                style={{
+                  backgroundColor: `${accent.hex}1f`,
+                  color: accent.hex,
+                  border: `1px solid ${accent.hex}55`,
+                  fontFamily: "'JetBrains Mono', monospace",
+                }}
+              >
+                <span
+                  className="w-1.5 h-1.5 rounded-full animate-pulse"
+                  style={{ backgroundColor: accent.hex, boxShadow: `0 0 8px ${accent.hex}` }}
+                />
+                OPEN TO WORK
+              </div>
+              <div className="flex items-center gap-1">
+                {(Object.keys(ACCENTS) as AccentKey[]).map((k) => (
+                  <button
+                    key={k}
+                    type="button"
+                    onClick={() => setAccentKey(k)}
+                    aria-label={`Theme ${ACCENTS[k].label}`}
+                    className="w-3.5 h-3.5 rounded-full cursor-pointer transition-transform hover:scale-125"
+                    style={{
+                      backgroundColor: ACCENTS[k].hex,
+                      border: accentKey === k ? '2px solid #ffffff' : '1px solid #0f172a',
+                    }}
+                  />
+                ))}
+              </div>
             </div>
-            <h2 className="text-2xl font-black tracking-tight uppercase" style={{ color: '#ffffff' }}>
+            <h2 className="text-2xl font-bold tracking-tight uppercase" style={{ color: '#ffffff' }}>
               Abhishek Jain
             </h2>
-            <p className="text-xs mt-1 font-medium" style={{ color: '#38bdf8', fontFamily: 'ui-monospace, monospace' }}>
+            <p className="text-[11px] mt-1 font-medium" style={{ color: accent.hex, fontFamily: "'JetBrains Mono', monospace" }}>
               FULL-STACK × AI/ML × DEVOPS
             </p>
           </div>
 
           {/* Chunky Primary Actions */}
-          <div className="space-y-2.5">
+          <div className="space-y-2">
             <button
               onClick={handleDownloadPDF}
               disabled={isDownloading}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 text-xs font-black uppercase tracking-wider rounded-xl transition-all hover:-translate-y-0.5 active:translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-extrabold uppercase tracking-wider rounded-xl transition-all hover:-translate-y-0.5 active:translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
               style={{
-                backgroundColor: '#a3ff47',
-                color: '#070b14',
+                backgroundColor: accent.hex,
+                color: accent.text,
                 border: '2px solid #000000',
                 boxShadow: '4px 4px 0 #000000',
-                fontFamily: 'ui-monospace, monospace',
+                fontFamily: "'JetBrains Mono', monospace",
               }}
             >
               {isDownloading ? '⏳ GENERATING A4 PDF...' : '⚡ DOWNLOAD A4 PDF'}
             </button>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-3 gap-1.5">
               <button
                 onClick={() => window.print()}
-                className="flex items-center justify-center gap-1.5 px-3 py-2 text-[11px] font-bold uppercase tracking-wider rounded-lg transition-all hover:-translate-y-0.5 cursor-pointer"
+                className="flex items-center justify-center gap-1 px-2 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all hover:-translate-y-0.5 cursor-pointer"
                 style={{
                   backgroundColor: '#1e293b',
                   color: '#f8fafc',
-                  border: '2px solid #334155',
-                  boxShadow: '3px 3px 0 #020617',
-                  fontFamily: 'ui-monospace, monospace',
+                  border: '1px solid #334155',
+                  fontFamily: "'JetBrains Mono', monospace",
                 }}
               >
                 🖨️ PRINT
               </button>
               <button
                 onClick={handleCopyEmail}
-                className="flex items-center justify-center gap-1.5 px-3 py-2 text-[11px] font-bold uppercase tracking-wider rounded-lg transition-all hover:-translate-y-0.5 cursor-pointer"
+                className="flex items-center justify-center gap-1 px-2 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all hover:-translate-y-0.5 cursor-pointer"
                 style={{
-                  backgroundColor: copiedEmail ? '#38bdf8' : '#1e293b',
-                  color: copiedEmail ? '#070b14' : '#38bdf8',
-                  border: '2px solid #334155',
-                  boxShadow: '3px 3px 0 #020617',
-                  fontFamily: 'ui-monospace, monospace',
+                  backgroundColor: copiedEmail ? accent.hex : '#1e293b',
+                  color: copiedEmail ? accent.text : accent.hex,
+                  border: '1px solid #334155',
+                  fontFamily: "'JetBrains Mono', monospace",
                 }}
               >
                 {copiedEmail ? '✓ COPIED' : '📋 EMAIL'}
               </button>
+              <button
+                onClick={() => setZoomFull((z) => !z)}
+                className="flex items-center justify-center gap-1 px-2 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all hover:-translate-y-0.5 cursor-pointer"
+                style={{
+                  backgroundColor: zoomFull ? '#f8fafc' : '#1e293b',
+                  color: zoomFull ? '#070b14' : '#f8fafc',
+                  border: '1px solid #334155',
+                  fontFamily: "'JetBrains Mono', monospace",
+                }}
+              >
+                {zoomFull ? 'FIT' : '100%'}
+              </button>
+            </div>
+          </div>
+
+          {/* Interactive Section Spotlight */}
+          <div
+            className="p-3 rounded-xl"
+            style={{ backgroundColor: '#0f172a', border: '1px solid #1e293b' }}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#94a3b8', fontFamily: "'JetBrains Mono', monospace" }}>
+                SPOTLIGHT SECTION
+              </span>
+              {activeSection && (
+                <button
+                  type="button"
+                  onClick={() => setActiveSection(null)}
+                  className="text-[10px] font-bold cursor-pointer"
+                  style={{ color: accent.hex, fontFamily: "'JetBrains Mono', monospace" }}
+                >
+                  CLEAR
+                </button>
+              )}
+            </div>
+            <div className="grid grid-cols-3 gap-1.5">
+              {(
+                [
+                  ['education', 'EDU'],
+                  ['skills', 'SKILLS'],
+                  ['experience', 'EXP'],
+                  ['projects', 'PROJECTS'],
+                  ['leadership', 'LEAD'],
+                  ['certifications', 'CERTS'],
+                ] as const
+              ).map(([key, label]) => {
+                const isActive = activeSection === key;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setActiveSection(isActive ? null : key)}
+                    className="py-1.5 rounded text-[10px] font-bold uppercase tracking-wider cursor-pointer transition-all"
+                    style={{
+                      backgroundColor: isActive ? accent.hex : '#1e293b',
+                      color: isActive ? accent.text : '#cbd5e1',
+                      border: `1px solid ${isActive ? '#000' : '#334155'}`,
+                      fontFamily: "'JetBrains Mono', monospace",
+                    }}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -342,7 +434,9 @@ function App() {
 
       {/* Centered A4 Viewport */}
       <main
-        className="flex-1 min-h-0 flex items-center justify-center p-3 lg:p-5 overflow-y-auto lg:overflow-hidden relative z-10"
+        className={`flex-1 min-h-0 flex items-center justify-center p-3 lg:p-5 relative z-10 ${
+          zoomFull ? 'overflow-auto items-start' : 'overflow-y-auto lg:overflow-hidden'
+        }`}
       >
         <div
           className="a4-scale-wrapper"
@@ -434,7 +528,13 @@ function App() {
               </header>
 
               {/* EDUCATION */}
-              <section style={{ marginBottom: '10px' }}>
+              <section
+                style={{
+                  marginBottom: '10px',
+                  opacity: activeSection && activeSection !== 'education' ? 0.28 : 1,
+                  transition: 'opacity 180ms ease',
+                }}
+              >
                 <h2 style={sectionHeadingStyle}>Education</h2>
                 <div style={{ marginBottom: '4px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
@@ -459,7 +559,13 @@ function App() {
               </section>
 
               {/* TECHNICAL SKILLS */}
-              <section style={{ marginBottom: '10px' }}>
+              <section
+                style={{
+                  marginBottom: '10px',
+                  opacity: activeSection && activeSection !== 'skills' ? 0.28 : 1,
+                  transition: 'opacity 180ms ease',
+                }}
+              >
                 <h2 style={sectionHeadingStyle}>Technical Skills</h2>
                 <div style={{ fontSize: '11.5px', lineHeight: 1.42, color: '#1e293b' }}>
                   <div><strong style={{ color: '#0f172a' }}>Languages:</strong> Python, TypeScript, SQL, Bash</div>
@@ -471,7 +577,13 @@ function App() {
               </section>
 
               {/* EXPERIENCE */}
-              <section style={{ marginBottom: '10px' }}>
+              <section
+                style={{
+                  marginBottom: '10px',
+                  opacity: activeSection && activeSection !== 'experience' ? 0.28 : 1,
+                  transition: 'opacity 180ms ease',
+                }}
+              >
                 <h2 style={sectionHeadingStyle}>Experience</h2>
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
@@ -496,7 +608,13 @@ function App() {
               </section>
 
               {/* PROJECTS */}
-              <section style={{ marginBottom: '10px' }}>
+              <section
+                style={{
+                  marginBottom: '10px',
+                  opacity: activeSection && activeSection !== 'projects' ? 0.28 : 1,
+                  transition: 'opacity 180ms ease',
+                }}
+              >
                 <h2 style={sectionHeadingStyle}>Projects</h2>
 
                 {/* Project 1 */}
@@ -563,7 +681,13 @@ function App() {
               </section>
 
               {/* LEADERSHIP */}
-              <section style={{ marginBottom: '10px' }}>
+              <section
+                style={{
+                  marginBottom: '10px',
+                  opacity: activeSection && activeSection !== 'leadership' ? 0.28 : 1,
+                  transition: 'opacity 180ms ease',
+                }}
+              >
                 <h2 style={sectionHeadingStyle}>Leadership</h2>
                 <div style={{ marginBottom: '5px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
@@ -608,7 +732,12 @@ function App() {
               </section>
 
               {/* CERTIFICATIONS */}
-              <section>
+              <section
+                style={{
+                  opacity: activeSection && activeSection !== 'certifications' ? 0.28 : 1,
+                  transition: 'opacity 180ms ease',
+                }}
+              >
                 <h2 style={sectionHeadingStyle}>Certifications</h2>
                 <div style={{ fontSize: '11.5px', lineHeight: 1.45, color: '#1e293b' }}>
                   <div>
