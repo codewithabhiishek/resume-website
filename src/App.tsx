@@ -141,7 +141,7 @@ export default function App() {
             </span>
           </div>
 
-          <nav className="flex items-center gap-4 sm:gap-6">
+          <nav className="flex items-center gap-2.5 sm:gap-6 shrink-0">
             <a
               href="#about"
               className="hidden md:inline text-xs font-mono-tech uppercase tracking-widest text-[#8b949e] hover:text-[#f4f4f0] transition-colors"
@@ -150,13 +150,13 @@ export default function App() {
             </a>
             <a
               href="#projects"
-              className="text-xs font-mono-tech uppercase tracking-widest text-[#8b949e] hover:text-[#f4f4f0] transition-colors"
+              className="text-[11px] sm:text-xs font-mono-tech uppercase tracking-wider sm:tracking-widest text-[#8b949e] hover:text-[#f4f4f0] transition-colors"
             >
               Projects
             </a>
             <a
               href="#resume"
-              className="text-xs font-mono-tech uppercase tracking-widest text-[#8b949e] hover:text-[#f4f4f0] transition-colors"
+              className="text-[11px] sm:text-xs font-mono-tech uppercase tracking-wider sm:tracking-widest text-[#8b949e] hover:text-[#f4f4f0] transition-colors"
             >
               Resume
             </a>
@@ -164,10 +164,11 @@ export default function App() {
               type="button"
               onClick={handleDownloadPDF}
               disabled={isDownloading}
-              className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 bg-[#c8ff29] text-[#08090c] font-mono-tech text-[11px] font-extrabold uppercase tracking-wider hover:bg-[#d8ff66] active:translate-y-px transition-all disabled:opacity-60 cursor-pointer shrink-0"
+              className="inline-flex items-center gap-1.5 px-2.5 sm:px-4 py-1.5 bg-[#c8ff29] text-[#08090c] font-mono-tech text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider hover:bg-[#d8ff66] active:translate-y-px transition-all disabled:opacity-60 cursor-pointer shrink-0"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>{isDownloading ? "Exporting..." : "Download PDF"}</span>
+              <span>{isDownloading ? "Exporting..." : "PDF"}</span>
+              <span className="hidden sm:inline">{isDownloading ? "" : " (A4)"}</span>
             </button>
           </nav>
         </div>
@@ -192,7 +193,7 @@ export default function App() {
                 <span>BCA &apos;26 · DBS GLOBAL UNIVERSITY</span>
               </div>
 
-              <h1 className="text-5xl sm:text-7xl lg:text-[84px] font-bold tracking-[-0.035em] leading-[0.95] text-[#f4f4f0]">
+              <h1 className="text-4xl sm:text-7xl lg:text-[84px] font-bold tracking-[-0.035em] leading-[0.95] text-[#f4f4f0]">
                 {PROFILE.name}
                 <span className="text-[#c8ff29]">.</span>
               </h1>
@@ -560,7 +561,7 @@ export default function App() {
             </div>
           </div>
 
-          <div className="print-only-container flex justify-center border border-[#1f242d] bg-[#08090c] p-3 sm:p-8">
+          <div className="print-only-container flex justify-center border border-[#1f242d] bg-[#08090c] p-2 sm:p-6 lg:p-8 overflow-x-hidden">
             <A4ResumeSheet sheetRef={resumeRef} />
           </div>
         </div>

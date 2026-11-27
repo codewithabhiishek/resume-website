@@ -89,15 +89,17 @@ export function A4ResumeSheet({ sheetRef }: A4ResumeSheetProps) {
         <h2 style={sectionHeadingStyle}>Education</h2>
         {EDUCATION.map((edu, idx) => (
           <div key={edu.school} style={{ marginBottom: idx === 0 ? "4px" : 0 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "baseline", gap: "2px 8px" }}>
               <span style={{ fontSize: "12.5px", fontWeight: 700, color: "#0f172a" }}>{edu.school}</span>
               <span style={{ fontSize: "11.5px", color: "#1e293b" }}>{edu.period}</span>
             </div>
             <div
               style={{
                 display: "flex",
+                flexWrap: "wrap",
                 justifyContent: "space-between",
                 alignItems: "baseline",
+                gap: "2px 8px",
                 fontSize: "11.5px",
                 fontStyle: "italic",
                 color: "#334155",
@@ -127,7 +129,7 @@ export function A4ResumeSheet({ sheetRef }: A4ResumeSheetProps) {
       <section style={{ marginBottom: "10px" }}>
         <h2 style={sectionHeadingStyle}>Experience</h2>
         <div>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "baseline", gap: "2px 8px" }}>
             <span style={{ fontSize: "12.5px", fontWeight: 700, color: "#0f172a" }}>{EXPERIENCE.role}</span>
             <span style={{ fontSize: "11.5px", color: "#1e293b" }}>{EXPERIENCE.period}</span>
           </div>
@@ -156,8 +158,8 @@ export function A4ResumeSheet({ sheetRef }: A4ResumeSheetProps) {
         <h2 style={sectionHeadingStyle}>Projects</h2>
         {PROJECTS.map((proj, idx) => (
           <div key={proj.id} style={{ marginBottom: idx === 0 ? "7px" : 0 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: "8px" }}>
-              <div style={{ fontSize: "12px", color: "#0f172a" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "baseline", gap: "2px 8px" }}>
+              <div style={{ fontSize: "12px", color: "#0f172a", minWidth: 0 }}>
                 <strong style={{ textDecoration: "underline" }}>{proj.name}</strong>{" "}
                 <span style={{ color: "#475569" }}>|</span>{" "}
                 <span style={{ fontStyle: "italic", fontSize: "11px", color: "#334155" }}>
