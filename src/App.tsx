@@ -1,7 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import html2pdf from "html2pdf.js";
 import {
   ArrowUpRight,
+  Check,
+  Copy,
   Download,
   ExternalLink,
   Github,
@@ -31,6 +34,7 @@ export default function App() {
   const resumeRef = useRef<HTMLDivElement>(null);
   const previewAreaRef = useRef<HTMLElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState(false);
   const [zoomMode, setZoomMode] = useState<"fit" | "full">("fit");
   const [scale, setScale] = useState(1);
   const [isDesktop, setIsDesktop] = useState(() =>
@@ -61,8 +65,8 @@ export default function App() {
     return () => window.removeEventListener("resize", updateScale);
   }, [zoomMode]);
 
-  const handleDownloadPDF = async () => {
-    if (!resumeRef.current) return;
+  const handleDownloadPDF = useCallback(async () => {
+    if (!resumeRef.current || isDownloading) return;
     setIsDownloading(true);
     try {
       const opt = {
@@ -77,13 +81,18 @@ export default function App() {
           backgroundColor: "#ffffff",
           windowWidth: A4_WIDTH,
           onclone: (doc: Document) => {
-            doc.querySelectorAll('style, link[rel="stylesheet"]').forEach((node) => {
-              if (node.tagName === "STYLE" && node.textContent?.includes("oklch")) {
-                node.remove();
-              } else if (node.tagName === "LINK") {
-                node.remove();
-              }
-            });
+            doc
+              .querySelectorAll('style, link[rel="stylesheet"]')
+              .forEach((node) => {
+                if (
+                  node.tagName === "STYLE" &&
+                  node.textContent?.includes("oklch")
+                ) {
+                  node.remove();
+                } else if (node.tagName === "LINK") {
+                  node.remove();
+                }
+              });
             const clonedSheet = doc.getElementById("resume-a4-sheet");
             if (clonedSheet) {
               clonedSheet.style.transform = "none";
@@ -94,7 +103,8 @@ export default function App() {
               clonedSheet.style.padding = "32px 42px";
               clonedSheet.style.backgroundColor = "#ffffff";
               clonedSheet.style.color = "#1e293b";
-              clonedSheet.style.fontFamily = "'Georgia', 'Times New Roman', serif";
+              clonedSheet.style.fontFamily =
+                "'Georgia', 'Times New Roman', serif";
               clonedSheet.style.boxSizing = "border-box";
               clonedSheet.style.boxShadow = "none";
               clonedSheet.style.border = "none";
@@ -116,7 +126,34 @@ export default function App() {
     } finally {
       setIsDownloading(false);
     }
-  };
+  }, [isDownloading]);
+
+  const handleCopyEmail = useCallback(() => {
+    navigator.clipboard?.writeText(PROFILE.email);
+    setCopiedEmail(true);
+    setTimeout(() => setCopiedEmail(false), 1800);
+  }, []);
+
+  // Keyboard shortcuts: D = Download PDF, P = Print, Z = Toggle Zoom
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement | null)?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || e.metaKey || e.ctrlKey || e.altKey) return;
+      const k = e.key.toLowerCase();
+      if (k === "d") {
+        e.preventDefault();
+        void handleDownloadPDF();
+      } else if (k === "p") {
+        e.preventDefault();
+        window.print();
+      } else if (k === "z") {
+        e.preventDefault();
+        setZoomMode((m) => (m === "fit" ? "full" : "fit"));
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [handleDownloadPDF]);
 
   return (
     <div className="min-h-screen lg:h-screen lg:overflow-hidden flex flex-col lg:flex-row bg-[#08090c] text-[#f4f4f0]">
@@ -202,28 +239,47 @@ export default function App() {
               type="button"
               onClick={handleDownloadPDF}
               disabled={isDownloading}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#c8ff29] text-[#08090c] font-mono-tech text-xs font-extrabold uppercase tracking-wider hover:bg-[#d7ff5c] active:translate-y-px transition-all disabled:opacity-60 cursor-pointer"
+              className="w-full flex items-center justify-between px-3.5 py-2.5 bg-[#c8ff29] text-[#08090c] font-mono-tech text-xs font-extrabold uppercase tracking-wider hover:bg-[#d7ff5c] active:translate-y-px transition-all disabled:opacity-60 cursor-pointer"
             >
-              <Download className="w-4 h-4" />
-              {isDownloading ? "GENERATING PDF..." : "DOWNLOAD RESUME"}
+              <span className="inline-flex items-center gap-2">
+                <Download className="w-4 h-4" />
+                {isDownloading ? "GENERATING PDF..." : "DOWNLOAD RESUME"}
+              </span>
+              <kbd className="px-1.5 py-0.5 text-[9px] bg-[#08090c]/15 border border-[#08090c]/25">
+                D
+              </kbd>
             </button>
 
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => window.print()}
-                className="flex items-center justify-center gap-1.5 px-3 py-2 border border-[#2d3340] bg-[#08090c] text-[#f4f4f0] font-mono-tech text-[11px] font-bold uppercase tracking-wider hover:border-[#c8ff29] hover:text-[#c8ff29] transition-colors cursor-pointer"
+                className="flex items-center justify-between px-2.5 py-2 border border-[#2d3340] bg-[#08090c] text-[#f4f4f0] font-mono-tech text-[10.5px] font-bold uppercase tracking-wider hover:border-[#c8ff29] hover:text-[#c8ff29] transition-colors cursor-pointer"
               >
-                <Printer className="w-3.5 h-3.5" />
-                PRINT RESUME
+                <span className="inline-flex items-center gap-1.5">
+                  <Printer className="w-3.5 h-3.5" />
+                  PRINT
+                </span>
+                <kbd className="text-[9px] text-[#8b949e]">P</kbd>
               </button>
-              <a
-                href={`mailto:${PROFILE.email}`}
-                className="flex items-center justify-center gap-1.5 px-3 py-2 border border-[#2d3340] bg-[#08090c] text-[#f4f4f0] font-mono-tech text-[11px] font-bold uppercase tracking-wider hover:border-[#c8ff29] hover:text-[#c8ff29] transition-colors"
-              >
-                <Mail className="w-3.5 h-3.5" />
-                EMAIL ME
-              </a>
+              <div className="flex border border-[#2d3340] bg-[#08090c]">
+                <a
+                  href={`mailto:${PROFILE.email}`}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2 font-mono-tech text-[10.5px] font-bold uppercase tracking-wider text-[#f4f4f0] hover:text-[#c8ff29] transition-colors"
+                >
+                  <Mail className="w-3.5 h-3.5" />
+                  EMAIL
+                </a>
+                <button
+                  type="button"
+                  onClick={handleCopyEmail}
+                  title="Copy email address"
+                  aria-label="Copy email address"
+                  className="px-2 border-l border-[#2d3340] text-[#8b949e] hover:text-[#c8ff29] transition-colors cursor-pointer"
+                >
+                  {copiedEmail ? <Check className="w-3 h-3 text-[#c8ff29]" /> : <Copy className="w-3 h-3" />}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -339,8 +395,17 @@ export default function App() {
             : "overflow-y-auto lg:overflow-hidden justify-center p-3 sm:p-5 lg:p-6"
         }`}
       >
+        {/* Subtle ambient spotlight behind the A4 sheet */}
+        <div
+          className="no-print pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(circle at 50% 48%, rgba(200, 255, 41, 0.045), transparent 58%)",
+          }}
+        />
+
         {/* Subtle floating document metadata + optional zoom toggle (desktop) */}
-        <div className="no-print hidden lg:flex items-center justify-between w-full max-w-[840px] mb-2.5 px-1 font-mono-tech text-[10px] tracking-[0.18em] text-[#8b949e]">
+        <div className="no-print hidden lg:flex items-center justify-between w-full max-w-[840px] mb-2.5 px-1 font-mono-tech text-[10px] tracking-[0.18em] text-[#8b949e] relative z-10">
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 bg-[#c8ff29]" />
             <span>A4 PORTRAIT · 210 × 297 MM · ATS VERIFIED</span>
@@ -348,16 +413,20 @@ export default function App() {
           <button
             type="button"
             onClick={() => setZoomMode((m) => (m === "fit" ? "full" : "fit"))}
-            className="inline-flex items-center gap-1.5 px-2 py-0.5 border border-[#2d3340] bg-[#0c0e13] text-[#f4f4f0] hover:border-[#c8ff29] hover:text-[#c8ff29] transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-2.5 py-0.5 border border-[#2d3340] bg-[#0c0e13] text-[#f4f4f0] hover:border-[#c8ff29] hover:text-[#c8ff29] transition-colors cursor-pointer"
           >
             {zoomMode === "fit" ? <Maximize2 className="w-3 h-3" /> : <Minimize2 className="w-3 h-3" />}
             <span>{zoomMode === "fit" ? `FIT (${Math.round(scale * 100)}%)` : "100% A4"}</span>
+            <kbd className="text-[9px] text-[#8b949e] ml-0.5">Z</kbd>
           </button>
         </div>
 
         {/* Centered A4 Resume Sheet */}
-        <div
-          className="a4-scale-wrapper shrink-0"
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          className="a4-scale-wrapper shrink-0 relative z-10"
           style={
             isDesktop
               ? {
@@ -380,7 +449,7 @@ export default function App() {
           >
             <A4ResumeSheet sheetRef={resumeRef} />
           </div>
-        </div>
+        </motion.div>
 
         {/* Mobile Footer Links */}
         <div className="no-print lg:hidden w-full max-w-[794px] mt-4 pt-3 border-t border-[#1f242d] flex flex-wrap items-center justify-between gap-2 font-mono-tech text-[11px] text-[#8b949e]">
