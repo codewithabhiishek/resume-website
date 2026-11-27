@@ -14,16 +14,17 @@ function App() {
 
   useEffect(() => {
     const updateScale = () => {
-      const desktop = window.innerWidth >= 860;
+      const desktop = window.innerWidth >= 1024;
       setIsDesktop(desktop);
       if (!desktop) {
         setScale(1);
         return;
       }
-      const availW = window.innerWidth - 40;
-      const availH = window.innerHeight - 76;
+      // Account for left sidebar (310px) + gaps/padding
+      const availW = window.innerWidth - 380;
+      const availH = window.innerHeight - 40;
       const next = Math.min(1, availW / A4_WIDTH, availH / A4_HEIGHT);
-      setScale(Math.max(0.45, next));
+      setScale(Math.max(0.48, next));
     };
     updateScale();
     window.addEventListener('resize', updateScale);
@@ -104,58 +105,191 @@ function App() {
 
   return (
     <div
-      className="min-h-screen lg:h-screen lg:overflow-hidden flex flex-col"
-      style={{ backgroundColor: '#e2e8f0' }}
+      className="min-h-screen lg:h-screen lg:overflow-hidden flex flex-col lg:flex-row"
+      style={{ backgroundColor: '#0f172a' }}
     >
-      {/* Top Bar */}
+      {/* Mobile Top Bar */}
       <div
-        className="no-print shrink-0 z-50"
+        className="no-print lg:hidden shrink-0 z-50 px-4 py-2.5 flex items-center justify-between"
         style={{
-          backgroundColor: '#ffffff',
-          borderBottom: '1px solid #cbd5e1',
+          backgroundColor: '#0f172a',
+          borderBottom: '1px solid #1e293b',
         }}
       >
-        <div className="max-w-[1000px] mx-auto px-4 py-2 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <svg className="w-5 h-5" style={{ color: '#334155' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <span className="font-semibold text-sm sm:text-base" style={{ color: '#0f172a', fontFamily: 'system-ui, sans-serif' }}>
-              Abhishek&apos;s Resume
-            </span>
-          </div>
-          <button
-            onClick={handleDownloadPDF}
-            disabled={isDownloading}
-            className="flex items-center gap-2 px-4 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
-            style={{
-              backgroundColor: '#2563eb',
-              color: '#ffffff',
-              fontFamily: 'system-ui, sans-serif',
-            }}
-          >
-            {isDownloading ? (
-              <>
-                <svg className="animate-spin w-3.5 h-3.5" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Generating PDF...
-              </>
-            ) : (
-              <>
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Download PDF (A4)
-              </>
-            )}
-          </button>
+        <div className="flex items-center gap-2">
+          <svg className="w-5 h-5" style={{ color: '#60a5fa' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <span className="font-semibold text-sm" style={{ color: '#f8fafc', fontFamily: 'system-ui, sans-serif' }}>
+            Abhishek&apos;s Resume
+          </span>
         </div>
+        <button
+          onClick={handleDownloadPDF}
+          disabled={isDownloading}
+          className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg transition-all disabled:opacity-60 cursor-pointer"
+          style={{
+            backgroundColor: '#2563eb',
+            color: '#ffffff',
+            fontFamily: 'system-ui, sans-serif',
+          }}
+        >
+          {isDownloading ? 'Generating...' : 'Download PDF'}
+        </button>
       </div>
 
+      {/* Desktop Left Sidebar (eliminates empty side space & gives quick actions/highlights) */}
+      <aside
+        className="no-print hidden lg:flex lg:w-[320px] xl:w-[350px] shrink-0 flex-col justify-between p-6"
+        style={{
+          backgroundColor: '#0f172a',
+          borderRight: '1px solid #1e293b',
+          fontFamily: 'system-ui, -apple-system, sans-serif',
+        }}
+      >
+        <div className="space-y-5">
+          {/* Identity */}
+          <div>
+            <div
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium mb-3"
+              style={{ backgroundColor: 'rgba(34, 197, 94, 0.14)', color: '#4ade80', border: '1px solid rgba(74, 222, 128, 0.25)' }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#4ade80' }} />
+              Open to SWE / DevOps Roles
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight" style={{ color: '#f8fafc' }}>
+              Abhishek Jain
+            </h2>
+            <p className="text-xs mt-1 leading-relaxed" style={{ color: '#94a3b8' }}>
+              Full-Stack Engineer · AI/ML &amp; Cloud/DevOps · BCA &apos;26
+            </p>
+          </div>
+
+          {/* Primary Actions */}
+          <div className="space-y-2">
+            <button
+              onClick={handleDownloadPDF}
+              disabled={isDownloading}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer shadow-lg"
+              style={{
+                backgroundColor: '#2563eb',
+                color: '#ffffff',
+              }}
+            >
+              {isDownloading ? (
+                <>
+                  <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Generating A4 PDF...
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Download A4 PDF
+                </>
+              )}
+            </button>
+            <button
+              onClick={() => window.print()}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium rounded-lg transition-colors cursor-pointer"
+              style={{
+                backgroundColor: '#1e293b',
+                color: '#e2e8f0',
+                border: '1px solid #334155',
+              }}
+            >
+              Print A4 Sheet
+            </button>
+          </div>
+
+          {/* Quick Highlights */}
+          <div
+            className="rounded-xl p-3.5 space-y-2.5"
+            style={{ backgroundColor: '#1e293b', border: '1px solid #334155' }}
+          >
+            <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#60a5fa' }}>
+              Highlights
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="p-2 rounded-lg" style={{ backgroundColor: '#0f172a' }}>
+                <div className="font-bold text-sm" style={{ color: '#f8fafc' }}>20+</div>
+                <div className="text-[11px]" style={{ color: '#94a3b8' }}>Live Apps</div>
+              </div>
+              <div className="p-2 rounded-lg" style={{ backgroundColor: '#0f172a' }}>
+                <div className="font-bold text-sm" style={{ color: '#f8fafc' }}>Argo CD</div>
+                <div className="text-[11px]" style={{ color: '#94a3b8' }}>OSS Contributor</div>
+              </div>
+              <div className="p-2 rounded-lg" style={{ backgroundColor: '#0f172a' }}>
+                <div className="font-bold text-sm" style={{ color: '#f8fafc' }}>8th Rank</div>
+                <div className="text-[11px]" style={{ color: '#94a3b8' }}>Int&apos;l Hackathon</div>
+              </div>
+              <div className="p-2 rounded-lg" style={{ backgroundColor: '#0f172a' }}>
+                <div className="font-bold text-sm" style={{ color: '#f8fafc' }}>MSME 6.0</div>
+                <div className="text-[11px]" style={{ color: '#94a3b8' }}>Pitch Shortlist</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Direct Links */}
+          <div className="space-y-1.5 text-xs">
+            <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: '#94a3b8' }}>
+              Connect
+            </div>
+            <a
+              href="https://abhiishek.is-a.dev/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between px-3 py-2 rounded-lg transition-colors"
+              style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}
+            >
+              <span>Portfolio</span>
+              <span style={{ color: '#60a5fa' }}>abhiishek.is-a.dev ↗</span>
+            </a>
+            <a
+              href="https://github.com/codewithabhiishek"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between px-3 py-2 rounded-lg transition-colors"
+              style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}
+            >
+              <span>GitHub</span>
+              <span style={{ color: '#60a5fa' }}>@codewithabhiishek ↗</span>
+            </a>
+            <a
+              href="https://www.linkedin.com/in/codewithabhiishek"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between px-3 py-2 rounded-lg transition-colors"
+              style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}
+            >
+              <span>LinkedIn</span>
+              <span style={{ color: '#60a5fa' }}>Connect ↗</span>
+            </a>
+            <a
+              href="mailto:contactabhiishek101@gmail.com"
+              className="flex items-center justify-between px-3 py-2 rounded-lg transition-colors"
+              style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}
+            >
+              <span>Email</span>
+              <span className="truncate ml-2" style={{ color: '#60a5fa' }}>contactabhiishek101@gmail.com</span>
+            </a>
+          </div>
+        </div>
+
+        <div className="text-[11px]" style={{ color: '#64748b' }}>
+          A4 Format · 210 × 297 mm
+        </div>
+      </aside>
+
       {/* Centered A4 Viewport */}
-      <main className="flex-1 min-h-0 flex items-center justify-center p-3 lg:p-4 overflow-y-auto lg:overflow-hidden">
+      <main
+        className="flex-1 min-h-0 flex items-center justify-center p-3 lg:p-5 overflow-y-auto lg:overflow-hidden"
+        style={{ backgroundColor: '#1e293b' }}
+      >
         <div
           className="a4-scale-wrapper"
           style={
