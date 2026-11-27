@@ -1,0 +1,160 @@
+@import "tailwindcss";
+
+/* Resume-specific styles */
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+}
+
+/* LaTeX rendered content styles */
+.latex-rendered {
+  font-family: 'Latin Modern Roman', 'Computer Modern', 'Georgia', serif;
+  line-height: 1.5;
+  color: #000;
+}
+
+.latex-rendered h1,
+.latex-rendered h2,
+.latex-rendered h3 {
+  color: #000;
+}
+
+.latex-rendered section {
+  margin-bottom: 0.5em;
+}
+
+.latex-rendered ul,
+.latex-rendered ol {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+/* LaTeX.js specific overrides for clean resume look */
+.latex-rendered .LaTeX {
+  font-size: 11pt;
+}
+
+.latex-rendered .title {
+  font-size: 1.8em;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0.5em;
+}
+
+.latex-rendered .author {
+  text-align: center;
+}
+
+/* Print Styles - Perfect PDF output */
+@media print {
+  @page {
+    size: letter;
+    margin: 0.5in;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  html, body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Hide navigation */
+  nav {
+    display: none !important;
+  }
+
+  /* Hide all buttons */
+  button {
+    display: none !important;
+  }
+
+  /* Hide the editor view entirely */
+  .editor-view {
+    display: none !important;
+  }
+
+  /* Reset the page container */
+  .resume-page-container {
+    min-height: auto !important;
+    background: white !important;
+    padding: 0 !important;
+  }
+
+  /* Make the resume paper fill the page */
+  .resume-paper {
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    page-break-inside: avoid;
+  }
+
+  /* LaTeX rendered content print styles */
+  .latex-rendered {
+    padding: 0 !important;
+    max-width: 100% !important;
+    box-shadow: none !important;
+  }
+
+  /* Ensure proper page breaks */
+  section {
+    page-break-inside: avoid;
+  }
+
+  h2 {
+    page-break-after: avoid;
+  }
+
+  /* Remove padding from wrapper */
+  .resume-wrapper {
+    padding: 0 !important;
+  }
+}
+
+/* Scrollbar styling for the editor */
+textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: #1a1a2e;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background: #4a5568;
+  border-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+  background: #718096;
+}
+
+/* Preview panel scrollbar */
+.preview-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.preview-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.preview-scroll::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.preview-scroll::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
