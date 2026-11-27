@@ -80,7 +80,9 @@ export default function App() {
             const clonedSheet = doc.getElementById("resume-a4-sheet");
             if (clonedSheet) {
               clonedSheet.style.width = `${A4_WIDTH}px`;
-              clonedSheet.style.minHeight = `${A4_HEIGHT}px`;
+              clonedSheet.style.height = `${A4_HEIGHT - 1}px`;
+              clonedSheet.style.minHeight = `${A4_HEIGHT - 1}px`;
+              clonedSheet.style.overflow = "hidden";
               clonedSheet.style.padding = "32px 42px";
               clonedSheet.style.backgroundColor = "#ffffff";
               clonedSheet.style.color = "#1e293b";
